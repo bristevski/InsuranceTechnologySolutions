@@ -1,6 +1,7 @@
-﻿using Core.Claims.Entities;
+﻿using Claims.Application.Models.Enums;
+using Core.Claims.Entities;
 
-namespace Claims.Core.Claims.Interfaces
+namespace Claims.Application.Interfaces
 {
     public interface ICoverService
     {
@@ -8,5 +9,6 @@ namespace Claims.Core.Claims.Interfaces
         Task<Cover> GetCoverAsync(string coverId);
         Task<Cover> AddCoverAsync(Cover cover);
         Task DeleteCoverAsync(string coverId);
+        decimal ComputePremium(DateTime startDate, DateTime endDate, CoverModelType type);
     }
 }

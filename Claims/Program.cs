@@ -1,9 +1,13 @@
 using System.Text.Json.Serialization;
-using Claims;
-using Claims.Auditing;
-using Claims.Controllers;
+using Claims.Application;
+using Claims.Application.Interfaces;
+using Claims.Application.Providers;
+using Claims.Application.Services;
+using Claims.Application.Validators;
+using Claims.Infrastructure;
+using Claims.Infrastructure.Audit;
+using Claims.Infrastructure.Claims;
 using Microsoft.EntityFrameworkCore;
-using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 
 
@@ -16,17 +20,45 @@ builder.Services
     {
         x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
+var conf = builder.Configuration;
 
-builder.Services.AddDbContext<AuditContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+//test123(builder, conf);
+//ApplicationModule.RegisterApplicationDependencies(builder.Services);
+//InfrastructureModule.RegisterInfrastructureDependencies(builder.Services, 
+//                                    conf.GetConnectionString("DefaultConnection"), 
+//                                    conf.GetConnectionString("MongoDb"),
+//                                    conf["MongoDb:DatabaseName"]);
+
+//START
+
+//builder.Services.AddScoped<IAuditContext, AuditContext>();
+//builder.Services.AddScoped<IClaimsContext, ClaimsContext>();
+
+InfrastructureModule.RegisterInfrastructureDependencies(builder.Services);
+ApplicationModule.RegisterApplicationDependencies(builder.Services);
+
+//builder.Services.AddScoped<IGuidProvider, GuidProvider>();
+//builder.Services.AddScoped<IDateTimeProvider, DateTimeProvider>();
+//builder.Services.AddScoped<IComputingStrategyProvider, ComputingStrategyProvider>();
+
+//builder.Services.AddScoped<ICoverValidator, CoverValidator>();
+//builder.Services.AddScoped<IClaimValidator, ClaimValidator>();
+
+//builder.Services.AddScoped<IAuditService, AuditService>();
+//builder.Services.AddScoped<IClaimService, ClaimService>();
+//builder.Services.AddScoped<ICoverService, CoverService>();
+
+builder.Services.AddDbContext<AuditContext>(options => options.UseSqlServer(conf.GetConnectionString("DefaultConnection")));
 builder.Services.AddDbContext<ClaimsContext>(
     options =>
     {
-        var client = new MongoClient(builder.Configuration.GetConnectionString("MongoDb"));
-        var database = client.GetDatabase(builder.Configuration["MongoDb:DatabaseName"]);
+        var client = new MongoClient(conf.GetConnectionString("MongoDb"));
+        var database = client.GetDatabase(conf["MongoDb:DatabaseName"]);
         options.UseMongoDB(database.Client, database.DatabaseNamespace.DatabaseName);
     }
 );
 
+//END
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -53,5 +85,18 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.Run();
+
+//static void test123(WebApplicationBuilder builder, ConfigurationManager conf)
+//{
+//    builder.Services.AddDbContext<AuditContext>(options => options.UseSqlServer(conf.GetConnectionString("DefaultConnection")));
+//    builder.Services.AddDbContext<ClaimsContext>(
+//        options =>
+//        {
+//            var client = new MongoClient(conf.GetConnectionString("MongoDb"));
+//            var database = client.GetDatabase(conf["MongoDb:DatabaseName"]);
+//            options.UseMongoDB(database.Client, database.DatabaseNamespace.DatabaseName);
+//        }
+//    );
+//}
 
 public partial class Program { }

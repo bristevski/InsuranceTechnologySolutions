@@ -1,8 +1,7 @@
 ﻿using Claims.Application.Interfaces;
 using Claims.Application.Providers;
 using Claims.Application.Services;
-using Claims.Core.Audit.Interfaces;
-using Claims.Core.Claims.Interfaces;
+using Claims.Application.Validators;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Claims.Application
@@ -14,6 +13,9 @@ namespace Claims.Application
             services.AddScoped<IGuidProvider, GuidProvider>();
             services.AddScoped<IDateTimeProvider, DateTimeProvider>();
             services.AddScoped<IComputingStrategyProvider, ComputingStrategyProvider>();
+
+            services.AddScoped<ICoverValidator, CoverValidator>();
+            services.AddScoped<IClaimValidator, ClaimValidator>();
 
             services.AddScoped<IAuditService, AuditService>();
             services.AddScoped<IClaimService, ClaimService>();

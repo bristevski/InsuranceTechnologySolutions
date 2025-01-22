@@ -12,10 +12,10 @@ namespace Claims.Application.Validators
 
             var currentDateTime = dateTimeProvider.DateTimeNow();
             if (currentDateTime > coverModel.StartDate)
-                errors.Add("Cover start date cannot be in the past");
+                errors.Add(CoverErrorMessages.StartDateInPast);
 
             if (coverModel.StartDate.AddYears(1) < coverModel.EndDate)
-                errors.Add("Cover period cannot be greater that 1 year");
+                errors.Add(CoverErrorMessages.PeriodGreaterThanOneYear);
 
             return errors;
         }

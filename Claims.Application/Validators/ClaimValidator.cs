@@ -10,11 +10,11 @@ namespace Claims.Application.Validators
             var errors = new List<string>();
 
             if (claimModel.DamageCost > 1000)
-                errors.Add("Damage cost cannot exceed more than 1000");
+                errors.Add(ClaimErrorMessages.DamageCostTooHigh);
 
             var cover = await coverService.GetCoverAsync(claimModel.CoverId);
             if (claimModel.Created < cover.StartDate || claimModel.Created > cover.EndDate)
-                errors.Add("Claim is created outside of insurance period");
+                errors.Add(ClaimErrorMessages.InvalidCreationDate);
 
 
             return errors;

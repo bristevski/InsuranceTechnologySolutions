@@ -1,8 +1,6 @@
 ﻿using Claims.Infrastructure.Audit;
 using Claims.Infrastructure.Claims;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using MongoDB.Driver;
 
 namespace Claims.Infrastructure
 {

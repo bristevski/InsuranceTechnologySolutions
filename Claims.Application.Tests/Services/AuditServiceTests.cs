@@ -1,7 +1,5 @@
 ﻿using Claims.Application.Interfaces;
-using Claims.Application.Providers;
 using Claims.Application.Services;
-using Claims.Infrastructure;
 using Claims.Infrastructure.Audit;
 using Core.Audit.Entities;
 using NSubstitute;

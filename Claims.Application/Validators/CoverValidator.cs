@@ -1,6 +1,5 @@
 ﻿using Claims.Application.Interfaces;
 using Claims.Application.Models;
-using Claims.Application.Providers;
 
 namespace Claims.Application.Validators
 {

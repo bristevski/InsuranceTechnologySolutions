@@ -1,5 +1,4 @@
 ﻿using Claims.Application.Interfaces;
-using Claims.Infrastructure;
 using Claims.Infrastructure.Audit;
 using Core.Audit.Entities;
 

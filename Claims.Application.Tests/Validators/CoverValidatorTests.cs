@@ -1,5 +1,4 @@
-﻿
-using Claims.Application.Interfaces;
+﻿using Claims.Application.Interfaces;
 using Claims.Application.Models;
 using Claims.Application.Validators;
 using NSubstitute;

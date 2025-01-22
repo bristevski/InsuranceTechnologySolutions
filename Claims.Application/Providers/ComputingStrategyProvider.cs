@@ -1,7 +1,6 @@
 ﻿using Claims.Application.Interfaces;
 using Claims.Application.Providers.ComputingStrategy;
 using Claims.Core.Claims.Entities.Enums;
-using Core.Claims.Entities;
 
 namespace Claims.Application.Providers
 {

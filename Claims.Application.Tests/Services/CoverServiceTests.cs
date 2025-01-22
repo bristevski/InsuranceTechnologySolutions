@@ -1,5 +1,4 @@
 ﻿using Claims.Application.Interfaces;
-using Claims.Application.Providers;
 using Claims.Application.Services;
 using Claims.Core.Claims.Entities.Enums;
 using Claims.Infrastructure;
@@ -7,7 +6,7 @@ using Claims.Infrastructure.Claims;
 using Core.Claims.Entities;
 using NSubstitute;
 
-namespace Claims.Application.Tests
+namespace Claims.Application.Tests.Services
 {
     public class CoverServiceTests
     {
@@ -15,7 +14,7 @@ namespace Claims.Application.Tests
         private IComputingStrategyProvider _computingStrategyProvider;
         private IClaimsUnitOfWork _unitOfWork;
         private string _coverId = "Cover 1";
-        private DateTime _startDate = new DateTime(2025,2,22);
+        private DateTime _startDate = new DateTime(2025, 2, 22);
         private DateTime _endDate = new DateTime(2025, 2, 25);
         private CoverType _type = CoverType.Yacht;
 
@@ -24,8 +23,8 @@ namespace Claims.Application.Tests
             // Arrange
             var mockCovers = new List<Cover>
             {
-                new Cover 
-                { 
+                new Cover
+                {
                     Id = _coverId,
                 }
             };
@@ -49,8 +48,8 @@ namespace Claims.Application.Tests
         public async Task Should_AddCoverAsync()
         {
             // Assert
-            var cover = new Cover() 
-            { 
+            var cover = new Cover()
+            {
                 Id = "Cover 2",
                 StartDate = _startDate,
                 EndDate = _endDate,

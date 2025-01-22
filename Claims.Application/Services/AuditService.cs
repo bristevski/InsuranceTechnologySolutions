@@ -5,7 +5,7 @@ using Core.Audit.Entities;
 
 namespace Claims.Application.Services
 {
-    public class AuditService(IAuditContext dbContext, IDateTimeProvider dateTimeProvider) : IAuditService
+    public class AuditService(IAuditUnitOfWork unitOfWork, IDateTimeProvider dateTimeProvider) : IAuditService
     {
         public async Task AuditClaimAsync(string id, string httpRequestType)
         {
@@ -16,8 +16,8 @@ namespace Claims.Application.Services
                 ClaimId = id
             };
 
-            dbContext.ClaimAudits.Add(claimAudit);
-            await dbContext.SaveChangesAsync();
+            await unitOfWork.ClaimAudits.AddAsync(claimAudit);
+            await unitOfWork.SaveAsync();
         }
 
         public async Task AuditCoverAsync(string id, string httpRequestType)
@@ -29,8 +29,8 @@ namespace Claims.Application.Services
                 CoverId = id
             };
 
-            dbContext.CoverAudits.Add(coverAudit);
-            await dbContext.SaveChangesAsync();
+            await unitOfWork.CoverAudits.AddAsync(coverAudit);
+            await unitOfWork.SaveAsync();
         }
     }
 }

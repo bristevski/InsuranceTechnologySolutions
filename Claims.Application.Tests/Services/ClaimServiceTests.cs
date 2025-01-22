@@ -4,7 +4,7 @@ using Claims.Infrastructure.Claims;
 using Core.Claims.Entities;
 using NSubstitute;
 
-namespace Claims.Application.Tests
+namespace Claims.Application.Tests.Services
 {
     public class ClaimServiceTests
     {

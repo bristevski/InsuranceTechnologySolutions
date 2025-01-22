@@ -13,6 +13,7 @@ namespace Claims.Infrastructure
             services.AddScoped<IAuditContext, AuditContext>();
             services.AddScoped<IClaimsContext, ClaimsContext>();
             services.AddScoped<IClaimsUnitOfWork, ClaimsUnitOfWork>();
+            services.AddScoped<IAuditUnitOfWork, AuditUnitOfWork>();
         }
     }
 }

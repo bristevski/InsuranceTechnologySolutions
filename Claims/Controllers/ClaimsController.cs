@@ -26,7 +26,7 @@ namespace Claims.Controllers
             claimModel.Id = guidProvider.NewStringGuid();
 
             var addClaimTask = claimService.AddClaimAsync(claimModel.ToDomainModel());
-            var addAuditTask = auditService.AuditCoverAsync(claimModel.Id, Consts.HttpRequestTypePost);
+            var addAuditTask = auditService.AuditClaimAsync(claimModel.Id, Consts.HttpRequestTypePost);
 
             Task.WaitAll(addClaimTask, addAuditTask);
 
@@ -37,7 +37,7 @@ namespace Claims.Controllers
         public Task<ActionResult> DeleteAsync(string id)
         {
             var deleteClaimTask = claimService.DeleteClaimAsync(id);
-            var deleteAuditTask = auditService.AuditCoverAsync(id, Consts.HttpRequestTypeDelete);
+            var deleteAuditTask = auditService.AuditClaimAsync(id, Consts.HttpRequestTypeDelete);
 
             Task.WaitAll(deleteClaimTask, deleteAuditTask);
 

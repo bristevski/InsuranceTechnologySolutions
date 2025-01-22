@@ -9,6 +9,6 @@ namespace Claims.Application.Interfaces
         Task<Cover> GetCoverAsync(string coverId);
         Task<Cover> AddCoverAsync(Cover cover);
         Task DeleteCoverAsync(string coverId);
-        decimal ComputePremium(DateTime startDate, DateTime endDate, CoverModelType type);
+        decimal ComputePremium(Cover cover);
     }
 }

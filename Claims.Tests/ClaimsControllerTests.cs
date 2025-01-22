@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc.Testing;
+﻿using Claims.Application.Models;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Newtonsoft.Json;
 using Xunit;
 
 namespace Claims.Tests
@@ -18,7 +20,8 @@ namespace Claims.Tests
 
             response.EnsureSuccessStatusCode();
 
-            //TODO: Apart from ensuring 200 OK being returned, what else can be asserted?
+            var responseStrContent = await response.Content.ReadAsStringAsync();
+            var claims = JsonConvert.DeserializeObject<List<ClaimModel>>(responseStrContent);
         }
 
     }

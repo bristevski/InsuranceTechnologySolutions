@@ -13,7 +13,13 @@ public class CoversController(ICoverService coverService, IAuditService auditSer
     [HttpPost("compute")]
     public ActionResult ComputePremiumAsync(DateTime startDate, DateTime endDate, CoverModelType coverType)
     {
-        return Ok(coverService.ComputePremium(startDate, endDate, coverType));
+        var coverModel = new CoverModel()
+        {
+            StartDate = startDate,
+            EndDate = endDate,
+            Type = coverType
+        };
+        return Ok(coverService.ComputePremium(coverModel.ToDomainModel()));
     }
 
     [HttpGet]

@@ -4,6 +4,6 @@ namespace Claims.Application.Interfaces
 {
     public interface IComputingStrategyProvider
     {
-        IComputingStrategy GetComputingStrategy(CoverType type);
+        decimal ComputePremium(DateTime startDate, DateTime endDate, CoverType type);
     }
 }

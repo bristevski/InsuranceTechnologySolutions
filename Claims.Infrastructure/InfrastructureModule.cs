@@ -11,7 +11,8 @@ namespace Claims.Infrastructure
         public static void RegisterInfrastructureDependencies(IServiceCollection services)
         {
             services.AddScoped<IAuditContext, AuditContext>();
-            services.AddScoped<IClaimsContext, ClaimsContext>();            
+            services.AddScoped<IClaimsContext, ClaimsContext>();
+            services.AddScoped<IClaimsUnitOfWork, ClaimsUnitOfWork>();
         }
     }
 }

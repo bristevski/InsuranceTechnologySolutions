@@ -1,33 +1,32 @@
 ﻿using Claims.Application.Interfaces;
 using Claims.Infrastructure.Claims;
 using Core.Claims.Entities;
-using Microsoft.EntityFrameworkCore;
 
 namespace Claims.Application.Services
 {
-    public class ClaimService(IClaimsContext dbContext) : IClaimService
+    public class ClaimService(IClaimsUnitOfWork unitOfWork) : IClaimService
     {
         public async Task<Claim> AddClaimAsync(Claim claim)
         {
-            dbContext.Claims.Add(claim);
-            await dbContext.SaveChangesAsync();
+            await unitOfWork.Claims.AddAsync(claim);
+            await unitOfWork.SaveAsync();
 
             return claim;
         }
 
         public async Task DeleteClaimAsync(string claimId)
         {
-            var claim = await dbContext.Claims.SingleOrDefaultAsync(x => x.Id == claimId);
+            var claim = await unitOfWork.Claims.GetByIdAsync(claimId);
             if (claim is null)
-                throw new Exception($"Error when deleteing claim. Claim with id {claimId} does not exists");           
+                throw new Exception($"Error when deleteing claim. Claim with id {claimId} does not exists");
 
-            dbContext.Claims.Remove(claim);
-            await dbContext.SaveChangesAsync();          
+            await unitOfWork.Claims.DeleteAsync(claimId);
+            await unitOfWork.SaveAsync();
         }
 
         public async Task<Claim> GetClaimAsync(string claimId)
         {
-            var claim = await dbContext.Claims.SingleOrDefaultAsync(x => x.Id == claimId);
+            var claim = await unitOfWork.Claims.GetByIdAsync(claimId);
             if (claim is null)
                 throw new Exception($"Claim with id {claimId} does not exists");
 
@@ -36,7 +35,7 @@ namespace Claims.Application.Services
 
         public async Task<List<Claim>> GetClaimsAsync()
         {
-            return await dbContext.Claims.ToListAsync();
+            return (await unitOfWork.Claims.GetAllAsync()).ToList();
         }
     }
 }

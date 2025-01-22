@@ -1,13 +1,14 @@
 using Claims.Application.Interfaces;
 using Claims.Application.Models;
 using Claims.Application.Models.Enums;
+using Claims.Application;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Claims.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class CoversController(ICoverService coverService, ICoverValidator validator) : ControllerBase
+public class CoversController(ICoverService coverService, IAuditService auditService, IGuidProvider guidProvider, ICoverValidator validator) : ControllerBase
 {
     [HttpPost("compute")]
     public ActionResult ComputePremiumAsync(DateTime startDate, DateTime endDate, CoverModelType coverType)
@@ -28,21 +29,28 @@ public class CoversController(ICoverService coverService, ICoverValidator valida
     }
 
     [HttpPost]
-    public async Task<ActionResult> CreateAsync(CoverModel coverModel)
+    public Task<ActionResult> CreateAsync(CoverModel coverModel)
     {
         var errors = validator.ValidateModel(coverModel);
         if (errors.Any())
-            return BadRequest(errors);
+            return Task.FromResult<ActionResult>(BadRequest(errors));
 
-        var cover = await coverService.AddCoverAsync(coverModel.ToDomainModel());
-        coverModel.Id = cover.Id;
-        return Ok(coverModel);
+        coverModel.Id = guidProvider.NewStringGuid();
+
+        var addCoverTask = coverService.AddCoverAsync(coverModel.ToDomainModel());
+        var addAuditTask = auditService.AuditCoverAsync(coverModel.Id, Consts.HttpRequestTypePost);
+
+        Task.WaitAll(addCoverTask, addAuditTask);
+        return Task.FromResult<ActionResult>(Ok(coverModel));
     }
 
     [HttpDelete("{id}")]
-    public async Task<ActionResult> DeleteAsync(string id)
+    public Task<ActionResult> DeleteAsync(string id)
     {
-        await coverService.DeleteCoverAsync(id);
-        return Ok();
+        var deleteCoverTask = coverService.DeleteCoverAsync(id);
+        var deleteAuditTask = auditService.AuditCoverAsync(id, Consts.HttpRequestTypeDelete);
+
+        Task.WaitAll(deleteCoverTask, deleteAuditTask);
+        return Task.FromResult<ActionResult>(Ok());
     }
 }

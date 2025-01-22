@@ -10,7 +10,7 @@ namespace Claims.Application.Validators
         {
             var errors = new List<string>();
 
-            var currentDateTime = dateTimeProvider.DateTimeNow;
+            var currentDateTime = dateTimeProvider.DateTimeNow();
             if (currentDateTime > coverModel.StartDate)
                 errors.Add("Cover start date cannot be in the past");
 

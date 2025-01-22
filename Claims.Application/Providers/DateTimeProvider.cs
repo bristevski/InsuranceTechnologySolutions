@@ -4,6 +4,6 @@ namespace Claims.Application.Providers
 {
     public sealed class DateTimeProvider : IDateTimeProvider
     {
-        public DateTime DateTimeNow => DateTime.Now;
+        public DateTime DateTimeNow() => DateTime.Now;
     }
 }

@@ -7,19 +7,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Claims.Application.Services
 {
-    public class CoverService(IAuditService auditService, IClaimsContext dbContext, IComputingStrategyProvider computingStrategyProvider, IGuidProvider guidProvider) : ICoverService
+    public class CoverService(IClaimsContext dbContext, IComputingStrategyProvider computingStrategyProvider) : ICoverService
     {
         public async Task<Cover> AddCoverAsync(Cover cover)
         {
-            cover.Id = guidProvider.NewStringGuid();
-
             var computingStrategy = computingStrategyProvider.GetComputingStrategy(cover.Type);
             cover.Premium = computingStrategy.ComputePremium(cover.StartDate, cover.EndDate);
 
             dbContext.Covers.Add(cover);
             await dbContext.SaveChangesAsync();
-
-            _ = Task.Run(() => auditService.AuditCoverAsync(cover.Id, Consts.HttpRequestTypePost));
 
             return cover;
         }
@@ -32,8 +28,6 @@ namespace Claims.Application.Services
 
             dbContext.Covers.Remove(cover);
             await dbContext.SaveChangesAsync();
-
-            _ = Task.Run(() => auditService.AuditCoverAsync(coverId, Consts.HttpRequestTypeDelete));
         }
 
         public async Task<Cover> GetCoverAsync(string coverId)

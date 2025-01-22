@@ -10,7 +10,7 @@ namespace Claims.Application.Services
         {
             var claimAudit = new ClaimAudit()
             {
-                Created = dateTimeProvider.DateTimeNow,
+                Created = dateTimeProvider.DateTimeNow(),
                 HttpRequestType = httpRequestType,
                 ClaimId = id
             };
@@ -23,7 +23,7 @@ namespace Claims.Application.Services
         {
             var coverAudit = new CoverAudit()
             {
-                Created = dateTimeProvider.DateTimeNow,
+                Created = dateTimeProvider.DateTimeNow(),
                 HttpRequestType = httpRequestType,
                 CoverId = id
             };

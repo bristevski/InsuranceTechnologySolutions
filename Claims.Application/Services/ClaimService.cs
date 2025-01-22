@@ -5,16 +5,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Claims.Application.Services
 {
-    public class ClaimService(IAuditService auditService, IClaimsContext dbContext, IGuidProvider guidProvider) : IClaimService
+    public class ClaimService(IClaimsContext dbContext) : IClaimService
     {
         public async Task<Claim> AddClaimAsync(Claim claim)
         {
-            claim.Id = guidProvider.NewStringGuid();
-
             dbContext.Claims.Add(claim);
             await dbContext.SaveChangesAsync();
-
-            _ = Task.Run(() => auditService.AuditClaimAsync(claim.Id, Consts.HttpRequestTypePost));
 
             return claim;
         }
@@ -26,9 +22,7 @@ namespace Claims.Application.Services
                 throw new Exception($"Error when deleteing claim. Claim with id {claimId} does not exists");           
 
             dbContext.Claims.Remove(claim);
-            await dbContext.SaveChangesAsync();
-
-            _ = Task.Run(() => auditService.AuditClaimAsync(claimId, Consts.HttpRequestTypeDelete));            
+            await dbContext.SaveChangesAsync();          
         }
 
         public async Task<Claim> GetClaimAsync(string claimId)

@@ -1,5 +1,6 @@
 using Claims.Application.Interfaces;
 using Claims.Application.Models;
+using Claims.Application;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -7,7 +8,7 @@ namespace Claims.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ClaimsController(IClaimService claimService, IClaimValidator validator) : ControllerBase
+    public class ClaimsController(IClaimService claimService, IAuditService auditService, IGuidProvider guidProvider, IClaimValidator validator) : ControllerBase
     {
         [HttpGet]
         public async Task<IEnumerable<ClaimModel>> GetAsync()
@@ -22,16 +23,25 @@ namespace Claims.Controllers
             if(errors.Any())
                 return BadRequest(errors);
 
-            var claim = await claimService.AddClaimAsync(claimModel.ToDomainModel());
-            claim.Id = claim.Id;
-            return Ok(claim);
+            claimModel.Id = guidProvider.NewStringGuid();
+
+            var addClaimTask = claimService.AddClaimAsync(claimModel.ToDomainModel());
+            var addAuditTask = auditService.AuditCoverAsync(claimModel.Id, Consts.HttpRequestTypePost);
+
+            Task.WaitAll(addClaimTask, addAuditTask);
+
+            return Ok(claimModel);
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteAsync(string id)
+        public Task<ActionResult> DeleteAsync(string id)
         {
-            await claimService.DeleteClaimAsync(id);
-            return Ok();
+            var deleteClaimTask = claimService.DeleteClaimAsync(id);
+            var deleteAuditTask = auditService.AuditCoverAsync(id, Consts.HttpRequestTypeDelete);
+
+            Task.WaitAll(deleteClaimTask, deleteAuditTask);
+
+            return Task.FromResult<ActionResult>(Ok());
         }
 
         [HttpGet("{id}")]

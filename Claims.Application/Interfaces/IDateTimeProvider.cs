@@ -2,6 +2,6 @@
 {
     public interface IDateTimeProvider
     {
-        DateTime DateTimeNow { get; }
+        DateTime DateTimeNow();
     }
 }

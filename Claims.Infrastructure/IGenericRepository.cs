@@ -1,10 +1,9 @@
-﻿namespace Claims.Infrastructure
+﻿namespace Claims.Infrastructure;
+
+public interface IGenericRepository<T> where T : class
 {
-    public interface IGenericRepository<T> where T : class
-    {
-        Task<IEnumerable<T>> GetAllAsync();
-        Task<T> GetByIdAsync(string id);
-        Task AddAsync(T entity);
-        Task DeleteAsync(string id);
-    }
+    Task<IEnumerable<T>> GetAllAsync();
+    Task<T> GetByIdAsync(string id);
+    Task AddAsync(T entity);
+    Task DeleteAsync(string id);
 }

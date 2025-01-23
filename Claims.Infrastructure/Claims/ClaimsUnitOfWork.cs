@@ -1,51 +1,50 @@
-﻿using Core.Claims.Entities;
+﻿using Claims.Core.Claims.Entities;
 
-namespace Claims.Infrastructure.Claims
+namespace Claims.Infrastructure.Claims;
+
+public interface IClaimsUnitOfWork : IDisposable
 {
-    public interface IClaimsUnitOfWork : IDisposable
+    IGenericRepository<Claim> Claims { get; }
+    IGenericRepository<Cover> Covers { get; }
+    Task<int> SaveAsync();
+}
+
+public class ClaimsUnitOfWork : IClaimsUnitOfWork
+{
+    private readonly ClaimsContext _context;
+
+    private IGenericRepository<Claim> _claimRepository;
+    private IGenericRepository<Cover> _coverRepository;
+
+    public ClaimsUnitOfWork(ClaimsContext context)
     {
-        IGenericRepository<Claim> Claims { get; }
-        IGenericRepository<Cover> Covers { get; }
-        Task<int> SaveAsync();
+        _context = context;
     }
 
-    public class ClaimsUnitOfWork : IClaimsUnitOfWork
+    public IGenericRepository<Claim> Claims
     {
-        private readonly ClaimsContext _context;
-
-        private IGenericRepository<Claim> _claimRepository;
-        private IGenericRepository<Cover> _coverRepository;
-
-        public ClaimsUnitOfWork(ClaimsContext context)
+        get
         {
-            _context = context;
+            return _claimRepository ??= new ClaimsGenericRepository<Claim>(_context);
         }
+    }
 
-        public IGenericRepository<Claim> Claims
+    public IGenericRepository<Cover> Covers
+    {
+        get
         {
-            get
-            {
-                return _claimRepository ??= new ClaimsGenericRepository<Claim>(_context);
-            }
+            return _coverRepository ??= new ClaimsGenericRepository<Cover>(_context);
         }
-
-        public IGenericRepository<Cover> Covers
-        {
-            get
-            {
-                return _coverRepository ??= new ClaimsGenericRepository<Cover>(_context);
-            }
-        }
+    }
 
 
-        public async Task<int> SaveAsync()
-        {
-            return await _context.SaveChangesAsync();
-        }
+    public async Task<int> SaveAsync()
+    {
+        return await _context.SaveChangesAsync();
+    }
 
-        public void Dispose()
-        {
-            _context.Dispose();
-        }
+    public void Dispose()
+    {
+        _context.Dispose();
     }
 }

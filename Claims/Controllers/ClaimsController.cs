@@ -4,50 +4,49 @@ using Claims.Application;
 using Microsoft.AspNetCore.Mvc;
 
 
-namespace Claims.Controllers
+namespace Claims.Controllers;
+
+[ApiController]
+[Route("[controller]")]
+public class ClaimsController(IClaimService claimService, IAuditService auditService, IGuidProvider guidProvider, IClaimValidator validator) : ControllerBase
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class ClaimsController(IClaimService claimService, IAuditService auditService, IGuidProvider guidProvider, IClaimValidator validator) : ControllerBase
+    [HttpGet]
+    public async Task<IEnumerable<ClaimModel>> GetAsync()
     {
-        [HttpGet]
-        public async Task<IEnumerable<ClaimModel>> GetAsync()
-        {
-            return (await claimService.GetClaimsAsync()).Select(x => new ClaimModel(x));
-        }
+        return (await claimService.GetClaimsAsync()).Select(x => new ClaimModel(x));
+    }
 
-        [HttpPost]
-        public async Task<ActionResult> CreateAsync(ClaimModel claimModel)
-        {
-            var errors = await validator.ValidateModel(claimModel);
-            if(errors.Any())
-                return BadRequest(errors);
+    [HttpPost]
+    public async Task<ActionResult> CreateAsync(ClaimModel claimModel)
+    {
+        var errors = await validator.ValidateModel(claimModel);
+        if(errors.Any())
+            return BadRequest(errors);
 
-            claimModel.Id = guidProvider.NewStringGuid();
+        claimModel.Id = guidProvider.NewStringGuid();
 
-            var addClaimTask = claimService.AddClaimAsync(claimModel.ToDomainModel());
-            var addAuditTask = auditService.AuditClaimAsync(claimModel.Id, Consts.HttpRequestTypePost);
+        var addClaimTask = claimService.AddClaimAsync(claimModel.ToDomainModel());
+        var addAuditTask = auditService.AuditClaimAsync(claimModel.Id, Consts.HttpRequestTypePost);
 
-            Task.WaitAll(addClaimTask, addAuditTask);
+        Task.WaitAll(addClaimTask, addAuditTask);
 
-            return Ok(claimModel);
-        }
+        return Ok(claimModel);
+    }
 
-        [HttpDelete("{id}")]
-        public Task<ActionResult> DeleteAsync(string id)
-        {
-            var deleteClaimTask = claimService.DeleteClaimAsync(id);
-            var deleteAuditTask = auditService.AuditClaimAsync(id, Consts.HttpRequestTypeDelete);
+    [HttpDelete("{id}")]
+    public Task<ActionResult> DeleteAsync(string id)
+    {
+        var deleteClaimTask = claimService.DeleteClaimAsync(id);
+        var deleteAuditTask = auditService.AuditClaimAsync(id, Consts.HttpRequestTypeDelete);
 
-            Task.WaitAll(deleteClaimTask, deleteAuditTask);
+        Task.WaitAll(deleteClaimTask, deleteAuditTask);
 
-            return Task.FromResult<ActionResult>(Ok());
-        }
+        return Task.FromResult<ActionResult>(Ok());
+    }
 
-        [HttpGet("{id}")]
-        public async Task<ClaimModel> GetAsync(string id)
-        {
-            return new ClaimModel(await claimService.GetClaimAsync(id));
-        }
+    [HttpGet("{id}")]
+    public async Task<ClaimModel> GetAsync(string id)
+    {
+        return new ClaimModel(await claimService.GetClaimAsync(id));
     }
 }

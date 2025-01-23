@@ -5,68 +5,67 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 
 #nullable disable
 
-namespace Claims.Migrations
+namespace Claims.Migrations;
+
+[DbContext(typeof(AuditContext))]
+partial class AuditContextModelSnapshot : ModelSnapshot
 {
-    [DbContext(typeof(AuditContext))]
-    partial class AuditContextModelSnapshot : ModelSnapshot
+    protected override void BuildModel(ModelBuilder modelBuilder)
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
-        {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.7")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+        modelBuilder
+            .HasAnnotation("ProductVersion", "6.0.7")
+            .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+        SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("Claims.Auditing.ClaimAudit", b =>
-            {
-                b.Property<int>("Id")
-                    .ValueGeneratedOnAdd()
-                    .HasColumnType("int");
+        modelBuilder.Entity("Claims.Auditing.ClaimAudit", b =>
+        {
+            b.Property<int>("Id")
+                .ValueGeneratedOnAdd()
+                .HasColumnType("int");
 
-                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                b.Property<string>("ClaimId")
-                    .IsRequired()
-                    .HasColumnType("nvarchar(max)");
+            b.Property<string>("ClaimId")
+                .IsRequired()
+                .HasColumnType("nvarchar(max)");
 
-                b.Property<DateTime>("Created")
-                    .HasColumnType("datetime2");
+            b.Property<DateTime>("Created")
+                .HasColumnType("datetime2");
 
-                b.Property<string>("HttpRequestType")
-                    .IsRequired()
-                    .HasColumnType("nvarchar(max)");
+            b.Property<string>("HttpRequestType")
+                .IsRequired()
+                .HasColumnType("nvarchar(max)");
 
-                b.HasKey("Id");
+            b.HasKey("Id");
 
-                b.ToTable("ClaimAudits");
-            });
+            b.ToTable("ClaimAudits");
+        });
 
-            modelBuilder.Entity("Claims.Auditing.CoverAudit", b =>
-            {
-                b.Property<int>("Id")
-                    .ValueGeneratedOnAdd()
-                    .HasColumnType("int");
+        modelBuilder.Entity("Claims.Auditing.CoverAudit", b =>
+        {
+            b.Property<int>("Id")
+                .ValueGeneratedOnAdd()
+                .HasColumnType("int");
 
-                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                b.Property<string>("CoverId")
-                    .IsRequired()
-                    .HasColumnType("nvarchar(max)");
+            b.Property<string>("CoverId")
+                .IsRequired()
+                .HasColumnType("nvarchar(max)");
 
-                b.Property<DateTime>("Created")
-                    .HasColumnType("datetime2");
+            b.Property<DateTime>("Created")
+                .HasColumnType("datetime2");
 
-                b.Property<string>("HttpRequestType")
-                    .IsRequired()
-                    .HasColumnType("nvarchar(max)");
+            b.Property<string>("HttpRequestType")
+                .IsRequired()
+                .HasColumnType("nvarchar(max)");
 
-                b.HasKey("Id");
+            b.HasKey("Id");
 
-                b.ToTable("CoverAudits");
-            });
+            b.ToTable("CoverAudits");
+        });
 #pragma warning restore 612, 618
-        }
     }
 }

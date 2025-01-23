@@ -1,12 +1,11 @@
-﻿using Core.Claims.Entities;
+﻿using Claims.Core.Claims.Entities;
 
-namespace Claims.Application.Interfaces
+namespace Claims.Application.Interfaces;
+
+public interface IClaimService
 {
-    public interface IClaimService
-    {
-        Task<List<Claim>> GetClaimsAsync();
-        Task<Claim> GetClaimAsync(string claimId);
-        Task<Claim> AddClaimAsync(Claim claim);
-        Task DeleteClaimAsync(string claimId);
-    }
+    Task<List<Claim>> GetClaimsAsync();
+    Task<Claim> GetClaimAsync(string claimId);
+    Task<Claim> AddClaimAsync(Claim claim);
+    Task DeleteClaimAsync(string claimId);
 }

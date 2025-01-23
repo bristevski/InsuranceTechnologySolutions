@@ -1,35 +1,34 @@
 ﻿using Claims.Application.Interfaces;
 using Claims.Infrastructure.Audit;
-using Core.Audit.Entities;
+using Claims.Core.Audit.Entities;
 
-namespace Claims.Application.Services
+namespace Claims.Application.Services;
+
+public class AuditService(IAuditUnitOfWork unitOfWork, IDateTimeProvider dateTimeProvider) : IAuditService
 {
-    public class AuditService(IAuditUnitOfWork unitOfWork, IDateTimeProvider dateTimeProvider) : IAuditService
+    public async Task AuditClaimAsync(string id, string httpRequestType)
     {
-        public async Task AuditClaimAsync(string id, string httpRequestType)
+        var claimAudit = new ClaimAudit()
         {
-            var claimAudit = new ClaimAudit()
-            {
-                Created = dateTimeProvider.DateTimeNow(),
-                HttpRequestType = httpRequestType,
-                ClaimId = id
-            };
+            Created = dateTimeProvider.DateTimeNow(),
+            HttpRequestType = httpRequestType,
+            ClaimId = id
+        };
 
-            await unitOfWork.ClaimAudits.AddAsync(claimAudit);
-            await unitOfWork.SaveAsync();
-        }
+        await unitOfWork.ClaimAudits.AddAsync(claimAudit);
+        await unitOfWork.SaveAsync();
+    }
 
-        public async Task AuditCoverAsync(string id, string httpRequestType)
+    public async Task AuditCoverAsync(string id, string httpRequestType)
+    {
+        var coverAudit = new CoverAudit()
         {
-            var coverAudit = new CoverAudit()
-            {
-                Created = dateTimeProvider.DateTimeNow(),
-                HttpRequestType = httpRequestType,
-                CoverId = id
-            };
+            Created = dateTimeProvider.DateTimeNow(),
+            HttpRequestType = httpRequestType,
+            CoverId = id
+        };
 
-            await unitOfWork.CoverAudits.AddAsync(coverAudit);
-            await unitOfWork.SaveAsync();
-        }
+        await unitOfWork.CoverAudits.AddAsync(coverAudit);
+        await unitOfWork.SaveAsync();
     }
 }

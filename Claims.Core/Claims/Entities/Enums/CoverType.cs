@@ -1,11 +1,10 @@
-﻿namespace Claims.Core.Claims.Entities.Enums
+﻿namespace Claims.Core.Claims.Entities.Enums;
+
+public enum CoverType
 {
-    public enum CoverType
-    {
-        Yacht = 0,
-        PassengerShip = 1,
-        ContainerShip = 2,
-        BulkCarrier = 3,
-        Tanker = 4
-    }
+    Yacht = 0,
+    PassengerShip = 1,
+    ContainerShip = 2,
+    BulkCarrier = 3,
+    Tanker = 4
 }

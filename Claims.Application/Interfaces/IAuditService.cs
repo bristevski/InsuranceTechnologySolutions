@@ -1,8 +1,7 @@
-﻿namespace Claims.Application.Interfaces
+﻿namespace Claims.Application.Interfaces;
+
+public interface IAuditService
 {
-    public interface IAuditService
-    {
-        Task AuditClaimAsync(string id, string httpRequestType);
-        Task AuditCoverAsync(string id, string httpRequestType);
-    }
+    Task AuditClaimAsync(string id, string httpRequestType);
+    Task AuditCoverAsync(string id, string httpRequestType);
 }

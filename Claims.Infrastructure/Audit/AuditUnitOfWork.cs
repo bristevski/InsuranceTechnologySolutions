@@ -1,53 +1,50 @@
-﻿using Claims.Infrastructure.Claims;
-using Core.Audit.Entities;
-using Core.Claims.Entities;
+﻿using Claims.Core.Audit.Entities;
 
-namespace Claims.Infrastructure.Audit
+namespace Claims.Infrastructure.Audit;
+
+public interface IAuditUnitOfWork : IDisposable
 {
-    public interface IAuditUnitOfWork : IDisposable
+    IGenericRepository<ClaimAudit> ClaimAudits { get; }
+    IGenericRepository<CoverAudit> CoverAudits { get; }
+    Task<int> SaveAsync();
+}
+
+public class AuditUnitOfWork : IAuditUnitOfWork
+{
+    private readonly AuditContext _context;
+
+    private IGenericRepository<ClaimAudit> _claimAuditsRepository;
+    private IGenericRepository<CoverAudit> _coverAuditsRepository;
+
+    public AuditUnitOfWork(AuditContext context)
     {
-        IGenericRepository<ClaimAudit> ClaimAudits { get; }
-        IGenericRepository<CoverAudit> CoverAudits { get; }
-        Task<int> SaveAsync();
+        _context = context;
     }
 
-    public class AuditUnitOfWork : IAuditUnitOfWork
+    public IGenericRepository<ClaimAudit> ClaimAudits
     {
-        private readonly AuditContext _context;
-
-        private IGenericRepository<ClaimAudit> _claimAuditsRepository;
-        private IGenericRepository<CoverAudit> _coverAuditsRepository;
-
-        public AuditUnitOfWork(AuditContext context)
+        get
         {
-            _context = context;
+            return _claimAuditsRepository ??= new AuditGenericRepository<ClaimAudit>(_context);
         }
+    }
 
-        public IGenericRepository<ClaimAudit> ClaimAudits
+    public IGenericRepository<CoverAudit> CoverAudits
+    {
+        get
         {
-            get
-            {
-                return _claimAuditsRepository ??= new AuditGenericRepository<ClaimAudit>(_context);
-            }
+            return _coverAuditsRepository ??= new AuditGenericRepository<CoverAudit>(_context);
         }
-
-        public IGenericRepository<CoverAudit> CoverAudits
-        {
-            get
-            {
-                return _coverAuditsRepository ??= new AuditGenericRepository<CoverAudit>(_context);
-            }
-        }
+    }
 
 
-        public async Task<int> SaveAsync()
-        {
-            return await _context.SaveChangesAsync();
-        }
+    public async Task<int> SaveAsync()
+    {
+        return await _context.SaveChangesAsync();
+    }
 
-        public void Dispose()
-        {
-            _context.Dispose();
-        }
+    public void Dispose()
+    {
+        _context.Dispose();
     }
 }

@@ -1,11 +1,10 @@
-﻿namespace Claims.Core.Audit.Entities.Base
+﻿namespace Claims.Core.Audit.Entities.Base;
+
+public class BaseAudit
 {
-    public class BaseAudit
-    {
-        public int Id { get; set; }
+    public int Id { get; set; }
 
-        public DateTime Created { get; set; }
+    public DateTime Created { get; set; }
 
-        public string HttpRequestType { get; set; }
-    }
+    public string HttpRequestType { get; set; }
 }

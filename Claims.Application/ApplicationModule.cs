@@ -4,22 +4,21 @@ using Claims.Application.Services;
 using Claims.Application.Validators;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Claims.Application
+namespace Claims.Application;
+
+public static class ApplicationModule
 {
-    public static class ApplicationModule
+    public static void RegisterApplicationDependencies(IServiceCollection services)
     {
-        public static void RegisterApplicationDependencies(IServiceCollection services)
-        {
-            services.AddScoped<IGuidProvider, GuidProvider>();
-            services.AddScoped<IDateTimeProvider, DateTimeProvider>();
-            services.AddScoped<IComputingStrategyProvider, ComputingStrategyProvider>();
+        services.AddScoped<IGuidProvider, GuidProvider>();
+        services.AddScoped<IDateTimeProvider, DateTimeProvider>();
+        services.AddScoped<IComputingStrategyProvider, ComputingStrategyProvider>();
 
-            services.AddScoped<ICoverValidator, CoverValidator>();
-            services.AddScoped<IClaimValidator, ClaimValidator>();
+        services.AddScoped<ICoverValidator, CoverValidator>();
+        services.AddScoped<IClaimValidator, ClaimValidator>();
 
-            services.AddScoped<IAuditService, AuditService>();
-            services.AddScoped<IClaimService, ClaimService>();
-            services.AddScoped<ICoverService, CoverService>(); 
-        }
+        services.AddScoped<IAuditService, AuditService>();
+        services.AddScoped<IClaimService, ClaimService>();
+        services.AddScoped<ICoverService, CoverService>(); 
     }
 }

@@ -1,48 +1,47 @@
 ﻿using Claims.Application.Interfaces;
 using Claims.Infrastructure.Claims;
-using Core.Claims.Entities;
+using Claims.Core.Claims.Entities;
 
-namespace Claims.Application.Services
+namespace Claims.Application.Services;
+
+public class CoverService(IClaimsUnitOfWork unitOfWork, IComputingStrategyProvider computingStrategyProvider) : ICoverService
 {
-    public class CoverService(IClaimsUnitOfWork unitOfWork, IComputingStrategyProvider computingStrategyProvider) : ICoverService
+    public async Task<Cover> AddCoverAsync(Cover cover)
     {
-        public async Task<Cover> AddCoverAsync(Cover cover)
-        {
-            cover.Premium = ComputePremium(cover);
+        cover.Premium = ComputePremium(cover);
 
-            await unitOfWork.Covers.AddAsync(cover);
-            await unitOfWork.SaveAsync();
+        await unitOfWork.Covers.AddAsync(cover);
+        await unitOfWork.SaveAsync();
 
-            return cover;
-        }
+        return cover;
+    }
 
-        public async Task DeleteCoverAsync(string coverId)
-        {            
-            var cover = await unitOfWork.Covers.GetByIdAsync(coverId);
-            if (cover is null)
-                throw new Exception($"Error when delete cover. Cover with id {coverId} does not exists");
+    public async Task DeleteCoverAsync(string coverId)
+    {            
+        var cover = await unitOfWork.Covers.GetByIdAsync(coverId);
+        if (cover is null)
+            throw new Exception($"Error when delete cover. Cover with id {coverId} does not exists");
 
-            await unitOfWork.Covers.DeleteAsync(coverId);
-            await unitOfWork.SaveAsync();
-        }
+        await unitOfWork.Covers.DeleteAsync(coverId);
+        await unitOfWork.SaveAsync();
+    }
 
-        public async Task<Cover> GetCoverAsync(string coverId)
-        {
-            var cover = await unitOfWork.Covers.GetByIdAsync(coverId);
-            if (cover is null)
-                throw new Exception($"Cover with id {coverId} does not exists");
+    public async Task<Cover> GetCoverAsync(string coverId)
+    {
+        var cover = await unitOfWork.Covers.GetByIdAsync(coverId);
+        if (cover is null)
+            throw new Exception($"Cover with id {coverId} does not exists");
 
-            return cover;
-        }
+        return cover;
+    }
 
-        public async Task<List<Cover>> GetCoversAsync()
-        {
-            return (await unitOfWork.Covers.GetAllAsync()).ToList();
-        }
+    public async Task<List<Cover>> GetCoversAsync()
+    {
+        return (await unitOfWork.Covers.GetAllAsync()).ToList();
+    }
 
-        public decimal ComputePremium(Cover cover)
-        {
-            return computingStrategyProvider.ComputePremium(cover.StartDate, cover.EndDate, cover.Type);
-        }
+    public decimal ComputePremium(Cover cover)
+    {
+        return computingStrategyProvider.ComputePremium(cover.StartDate, cover.EndDate, cover.Type);
     }
 }

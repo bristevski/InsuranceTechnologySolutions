@@ -1,9 +1,8 @@
 ﻿using Claims.Application.Models;
 
-namespace Claims.Application.Interfaces
+namespace Claims.Application.Interfaces;
+
+public interface ICoverValidator
 {
-    public interface ICoverValidator
-    {
-        List<string> ValidateModel(CoverModel coverModel);
-    }
+    List<string> ValidateModel(CoverModel coverModel);
 }

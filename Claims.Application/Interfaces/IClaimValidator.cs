@@ -1,9 +1,8 @@
 ﻿using Claims.Application.Models;
 
-namespace Claims.Application.Interfaces
+namespace Claims.Application.Interfaces;
+
+public interface IClaimValidator
 {
-    public interface IClaimValidator
-    {
-        Task<List<string>> ValidateModel(ClaimModel claimModel);
-    }
+    Task<List<string>> ValidateModel(ClaimModel claimModel);
 }

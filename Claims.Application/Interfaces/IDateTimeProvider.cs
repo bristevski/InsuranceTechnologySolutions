@@ -1,7 +1,6 @@
-﻿namespace Claims.Application.Interfaces
+﻿namespace Claims.Application.Interfaces;
+
+public interface IDateTimeProvider
 {
-    public interface IDateTimeProvider
-    {
-        DateTime DateTimeNow();
-    }
+    DateTime DateTimeNow();
 }

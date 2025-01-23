@@ -1,8 +1,6 @@
-﻿using Claims.Core.Claims.Entities.Enums;
-namespace Claims.Application.Interfaces
+﻿namespace Claims.Application.Interfaces;
+
+public interface IComputingStrategy
 {
-    public interface IComputingStrategy
-    {
-        decimal ComputePremium(DateTime startDate, DateTime endDate);
-    }
+    decimal ComputePremium(DateTime startDate, DateTime endDate);
 }

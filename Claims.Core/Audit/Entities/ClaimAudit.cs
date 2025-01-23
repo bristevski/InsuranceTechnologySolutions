@@ -1,9 +1,8 @@
 ﻿using Claims.Core.Audit.Entities.Base;
 
-namespace Core.Audit.Entities
+namespace Claims.Core.Audit.Entities;
+
+public class ClaimAudit : BaseAudit
 {
-    public class ClaimAudit : BaseAudit
-    {
-        public string ClaimId { get; set; }
-    }
+    public string ClaimId { get; set; }
 }

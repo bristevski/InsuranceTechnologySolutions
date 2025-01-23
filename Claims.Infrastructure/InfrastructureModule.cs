@@ -2,16 +2,15 @@
 using Claims.Infrastructure.Claims;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Claims.Infrastructure
+namespace Claims.Infrastructure;
+
+public static class InfrastructureModule
 {
-    public static class InfrastructureModule
+    public static void RegisterInfrastructureDependencies(IServiceCollection services)
     {
-        public static void RegisterInfrastructureDependencies(IServiceCollection services)
-        {
-            services.AddScoped<IAuditContext, AuditContext>();
-            services.AddScoped<IClaimsContext, ClaimsContext>();
-            services.AddScoped<IClaimsUnitOfWork, ClaimsUnitOfWork>();
-            services.AddScoped<IAuditUnitOfWork, AuditUnitOfWork>();
-        }
+        services.AddScoped<IAuditContext, AuditContext>();
+        services.AddScoped<IClaimsContext, ClaimsContext>();
+        services.AddScoped<IClaimsUnitOfWork, ClaimsUnitOfWork>();
+        services.AddScoped<IAuditUnitOfWork, AuditUnitOfWork>();
     }
 }

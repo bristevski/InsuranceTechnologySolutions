@@ -1,40 +1,39 @@
 ﻿using Claims.Application.Models.Enums;
 using Claims.Core.Claims.Entities.Enums;
-using Core.Claims.Entities;
+using Claims.Core.Claims.Entities;
 
-namespace Claims.Application.Models
+namespace Claims.Application.Models;
+
+public class ClaimModel
 {
-    public class ClaimModel
+    public ClaimModel() { }
+    public ClaimModel(Claim claim) 
     {
-        public ClaimModel() { }
-        public ClaimModel(Claim claim) 
-        {
-            Id = claim.Id;
-            CoverId = claim.CoverId;
-            Created = claim.Created;
-            Name = claim.Name;
-            Type = (ClaimModelType)claim.Type;
-            DamageCost = claim.DamageCost;
-        }
+        Id = claim.Id;
+        CoverId = claim.CoverId;
+        Created = claim.Created;
+        Name = claim.Name;
+        Type = (ClaimModelType)claim.Type;
+        DamageCost = claim.DamageCost;
+    }
 
-        public string Id { get; set; }
-        public string CoverId { get; set; }
-        public DateTime Created { get; set; }
-        public string Name { get; set; }
-        public ClaimModelType Type { get; set; }
-        public decimal DamageCost { get; set; }
+    public string Id { get; set; }
+    public string CoverId { get; set; }
+    public DateTime Created { get; set; }
+    public string Name { get; set; }
+    public ClaimModelType Type { get; set; }
+    public decimal DamageCost { get; set; }
 
-        public Claim ToDomainModel()
+    public Claim ToDomainModel()
+    {
+        return new Claim()
         {
-            return new Claim()
-            {
-                Id = Id,
-                CoverId = CoverId,
-                Created = Created,
-                Name = Name,
-                Type = (ClaimType)Type,
-                DamageCost = DamageCost
-            };
-        }
+            Id = Id,
+            CoverId = CoverId,
+            Created = Created,
+            Name = Name,
+            Type = (ClaimType)Type,
+            DamageCost = DamageCost
+        };
     }
 }

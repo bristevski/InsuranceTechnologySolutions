@@ -3,58 +3,57 @@ using Claims.Application.Models;
 using Claims.Application.Validators;
 using NSubstitute;
 
-namespace Claims.Application.Tests.Validators
+namespace Claims.Application.Tests.Validators;
+
+public class CoverValidatorTests
 {
-    public class CoverValidatorTests
+    private CoverValidator _sut;
+    private IDateTimeProvider _dateTimeProvider;
+    private DateTime _currentDateTime = new DateTime(2025, 2, 10);
+
+    public CoverValidatorTests()
     {
-        private CoverValidator _sut;
-        private IDateTimeProvider _dateTimeProvider;
-        private DateTime _currentDateTime = new DateTime(2025, 2, 10);
+        // Arrange
+        _dateTimeProvider = Substitute.For<IDateTimeProvider>();
+        _dateTimeProvider.DateTimeNow().Returns(_currentDateTime);
+        _sut = new CoverValidator(_dateTimeProvider);
+    }
 
-        public CoverValidatorTests()
+    [Fact]
+    public void Should_ReturnNoErrorForValidModel()
+    {
+        // Arrange
+        var coverMode = new CoverModel()
         {
-            // Arrange
-            _dateTimeProvider = Substitute.For<IDateTimeProvider>();
-            _dateTimeProvider.DateTimeNow().Returns(_currentDateTime);
-            _sut = new CoverValidator(_dateTimeProvider);
-        }
+            StartDate = _currentDateTime.AddDays(5),
+            EndDate = _currentDateTime.AddDays(35)
+        };
 
-        [Fact]
-        public void Should_ReturnNoErrorForValidModel()
+        // Act
+        var errors = _sut.ValidateModel(coverMode);
+
+        // Assert
+        Assert.NotNull(errors);
+        Assert.Empty(errors);
+    }
+
+    [Fact]
+    public void Should_ReturnErrorForInvalidModel()
+    {
+        // Arrange
+        var coverModel = new CoverModel()
         {
-            // Arrange
-            var coverMode = new CoverModel()
-            {
-                StartDate = _currentDateTime.AddDays(5),
-                EndDate = _currentDateTime.AddDays(35)
-            };
+            StartDate = _currentDateTime.AddDays(-5),
+            EndDate = _currentDateTime.AddYears(2)
+        };
 
-            // Act
-            var errors = _sut.ValidateModel(coverMode);
+        // Act
+        var errors = _sut.ValidateModel(coverModel);
 
-            // Assert
-            Assert.NotNull(errors);
-            Assert.Empty(errors);
-        }
-
-        [Fact]
-        public void Should_ReturnErrorForInvalidModel()
-        {
-            // Arrange
-            var coverModel = new CoverModel()
-            {
-                StartDate = _currentDateTime.AddDays(-5),
-                EndDate = _currentDateTime.AddYears(2)
-            };
-
-            // Act
-            var errors = _sut.ValidateModel(coverModel);
-
-            // Assert
-            Assert.NotNull(errors);
-            Assert.Equal(2, errors.Count);
-            Assert.Equal(CoverErrorMessages.StartDateInPast, errors[0]);
-            Assert.Equal(CoverErrorMessages.PeriodGreaterThanOneYear, errors[1]);
-        }
+        // Assert
+        Assert.NotNull(errors);
+        Assert.Equal(2, errors.Count);
+        Assert.Equal(CoverErrorMessages.StartDateInPast, errors[0]);
+        Assert.Equal(CoverErrorMessages.PeriodGreaterThanOneYear, errors[1]);
     }
 }

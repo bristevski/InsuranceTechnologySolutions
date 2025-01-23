@@ -1,8 +1,7 @@
-﻿namespace Claims.Application
+﻿namespace Claims.Application;
+
+public static class Consts
 {
-    public static class Consts
-    {
-        public const string HttpRequestTypePost = "POST";
-        public const string HttpRequestTypeDelete = "DELETE";
-    }
+    public const string HttpRequestTypePost = "POST";
+    public const string HttpRequestTypeDelete = "DELETE";
 }

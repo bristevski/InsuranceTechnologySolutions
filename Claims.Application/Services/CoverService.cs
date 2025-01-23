@@ -1,6 +1,6 @@
 ﻿using Claims.Application.Interfaces;
-using Claims.Infrastructure.Claims;
 using Claims.Core.Claims.Entities;
+using Claims.Core.Claims.Interfaces;
 
 namespace Claims.Application.Services;
 

@@ -1,4 +1,6 @@
-﻿using Claims.Infrastructure.Audit;
+﻿using Claims.Core.Audit.Interfaces;
+using Claims.Core.Claims.Interfaces;
+using Claims.Infrastructure.Audit;
 using Claims.Infrastructure.Claims;
 using Microsoft.Extensions.DependencyInjection;
 

@@ -1,6 +1,6 @@
 ﻿using Claims.Application.Interfaces;
-using Claims.Infrastructure.Audit;
 using Claims.Core.Audit.Entities;
+using Claims.Core.Audit.Interfaces;
 
 namespace Claims.Application.Services;
 

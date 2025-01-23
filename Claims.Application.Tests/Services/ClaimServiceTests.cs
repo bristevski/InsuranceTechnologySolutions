@@ -1,8 +1,8 @@
 ﻿using Claims.Application.Services;
-using Claims.Infrastructure;
-using Claims.Infrastructure.Claims;
 using Claims.Core.Claims.Entities;
 using NSubstitute;
+using Claims.Core;
+using Claims.Core.Claims.Interfaces;
 
 namespace Claims.Application.Tests.Services;
 

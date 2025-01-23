@@ -1,13 +1,8 @@
-﻿using Claims.Core.Audit.Entities;
+﻿using Claims.Core;
+using Claims.Core.Audit.Entities;
+using Claims.Core.Audit.Interfaces;
 
 namespace Claims.Infrastructure.Audit;
-
-public interface IAuditUnitOfWork : IDisposable
-{
-    IGenericRepository<ClaimAudit> ClaimAudits { get; }
-    IGenericRepository<CoverAudit> CoverAudits { get; }
-    Task<int> SaveAsync();
-}
 
 public class AuditUnitOfWork : IAuditUnitOfWork
 {
@@ -36,7 +31,6 @@ public class AuditUnitOfWork : IAuditUnitOfWork
             return _coverAuditsRepository ??= new AuditGenericRepository<CoverAudit>(_context);
         }
     }
-
 
     public async Task<int> SaveAsync()
     {

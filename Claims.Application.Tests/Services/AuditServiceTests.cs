@@ -1,8 +1,7 @@
-﻿using Claims.Application.Interfaces;
-using Claims.Application.Services;
-using Claims.Infrastructure.Audit;
+﻿using Claims.Application.Services;
 using Claims.Core.Audit.Entities;
 using NSubstitute;
+using Claims.Core.Audit.Interfaces;
 
 namespace Claims.Application.Tests.Services;
 

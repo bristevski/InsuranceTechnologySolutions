@@ -19,6 +19,8 @@ builder.Services
 
 var conf = builder.Configuration;
 
+builder.Services.AddSingleton(TimeProvider.System);
+
 InfrastructureModule.RegisterInfrastructureDependencies(builder.Services);
 ApplicationModule.RegisterApplicationDependencies(builder.Services);
 

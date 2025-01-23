@@ -1,4 +1,4 @@
-﻿namespace Claims.Infrastructure;
+﻿namespace Claims.Core;
 
 public interface IGenericRepository<T> where T : class
 {

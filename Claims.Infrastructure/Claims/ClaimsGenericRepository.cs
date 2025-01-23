@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Claims.Core;
+using Microsoft.EntityFrameworkCore;
 
 namespace Claims.Infrastructure.Claims;
 

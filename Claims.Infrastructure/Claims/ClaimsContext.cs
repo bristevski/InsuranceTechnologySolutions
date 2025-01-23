@@ -1,15 +1,9 @@
 ﻿using Claims.Core.Claims.Entities;
+using Claims.Core.Claims.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.EntityFrameworkCore.Extensions;
 
 namespace Claims.Infrastructure.Claims;
-
-public interface IClaimsContext
-{
-    DbSet<Claim> Claims { get; }
-    DbSet<Cover> Covers { get; }
-    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
-}
 
 public class ClaimsContext : DbContext, IClaimsContext
 {

@@ -1,13 +1,8 @@
-﻿using Claims.Core.Claims.Entities;
+﻿using Claims.Core;
+using Claims.Core.Claims.Entities;
+using Claims.Core.Claims.Interfaces;
 
 namespace Claims.Infrastructure.Claims;
-
-public interface IClaimsUnitOfWork : IDisposable
-{
-    IGenericRepository<Claim> Claims { get; }
-    IGenericRepository<Cover> Covers { get; }
-    Task<int> SaveAsync();
-}
 
 public class ClaimsUnitOfWork : IClaimsUnitOfWork
 {
@@ -36,7 +31,6 @@ public class ClaimsUnitOfWork : IClaimsUnitOfWork
             return _coverRepository ??= new ClaimsGenericRepository<Cover>(_context);
         }
     }
-
 
     public async Task<int> SaveAsync()
     {

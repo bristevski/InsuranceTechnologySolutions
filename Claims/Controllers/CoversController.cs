@@ -23,40 +23,40 @@ public class CoversController(ICoverService coverService, IAuditService auditSer
     }
 
     [HttpGet]
-    public async Task<IEnumerable<CoverModel>> GetAsync()
+    public async Task<ActionResult> GetAsync()
     {
-        return (await coverService.GetCoversAsync()).Select(x => new CoverModel(x));
+        return Ok((await coverService.GetCoversAsync()).Select(x => new CoverModel(x)));
     }
 
     [HttpGet("{id}")]
-    public async Task<CoverModel> GetAsync(string id)
+    public async Task<ActionResult> GetAsync(string id)
     {
-        return new CoverModel(await coverService.GetCoverAsync(id));
+        return Ok(new CoverModel(await coverService.GetCoverAsync(id)));
     }
 
     [HttpPost]
-    public Task<ActionResult> CreateAsync(CoverModel coverModel)
+    public async Task<ActionResult> CreateAsync(CoverModel coverModel)
     {
         var errors = validator.ValidateModel(coverModel);
         if (errors.Any())
-            return Task.FromResult<ActionResult>(BadRequest(errors));
+            return BadRequest(errors);
 
         coverModel.Id = guidProvider.NewStringGuid();
 
         var addCoverTask = coverService.AddCoverAsync(coverModel.ToDomainModel());
         var addAuditTask = auditService.AuditCoverAsync(coverModel.Id, Consts.HttpRequestTypePost);
 
-        Task.WaitAll(addCoverTask, addAuditTask);
-        return Task.FromResult<ActionResult>(Ok(coverModel));
+        await Task.WhenAll(addCoverTask, addAuditTask);
+        return Ok(coverModel);
     }
 
     [HttpDelete("{id}")]
-    public Task<ActionResult> DeleteAsync(string id)
+    public async Task<ActionResult> DeleteAsync(string id)
     {
         var deleteCoverTask = coverService.DeleteCoverAsync(id);
         var deleteAuditTask = auditService.AuditCoverAsync(id, Consts.HttpRequestTypeDelete);
 
-        Task.WaitAll(deleteCoverTask, deleteAuditTask);
-        return Task.FromResult<ActionResult>(Ok());
+        await Task.WhenAll(deleteCoverTask, deleteAuditTask);
+        return Ok();
     }
 }

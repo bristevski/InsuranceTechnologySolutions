@@ -11,9 +11,9 @@ namespace Claims.Controllers;
 public class ClaimsController(IClaimService claimService, IAuditService auditService, IGuidProvider guidProvider, IClaimValidator validator) : ControllerBase
 {
     [HttpGet]
-    public async Task<IEnumerable<ClaimModel>> GetAsync()
+    public async Task<ActionResult> GetAsync()
     {
-        return (await claimService.GetClaimsAsync()).Select(x => new ClaimModel(x));
+        return Ok((await claimService.GetClaimsAsync()).Select(x => new ClaimModel(x)));
     }
 
     [HttpPost]
@@ -28,25 +28,25 @@ public class ClaimsController(IClaimService claimService, IAuditService auditSer
         var addClaimTask = claimService.AddClaimAsync(claimModel.ToDomainModel());
         var addAuditTask = auditService.AuditClaimAsync(claimModel.Id, Consts.HttpRequestTypePost);
 
-        Task.WaitAll(addClaimTask, addAuditTask);
+        await Task.WhenAll(addClaimTask, addAuditTask);
 
         return Ok(claimModel);
     }
 
     [HttpDelete("{id}")]
-    public Task<ActionResult> DeleteAsync(string id)
+    public async Task<ActionResult> DeleteAsync(string id)
     {
         var deleteClaimTask = claimService.DeleteClaimAsync(id);
         var deleteAuditTask = auditService.AuditClaimAsync(id, Consts.HttpRequestTypeDelete);
 
-        Task.WaitAll(deleteClaimTask, deleteAuditTask);
+        await Task.WhenAll(deleteClaimTask, deleteAuditTask);
 
-        return Task.FromResult<ActionResult>(Ok());
+        return Ok();
     }
 
     [HttpGet("{id}")]
-    public async Task<ClaimModel> GetAsync(string id)
+    public async Task<ActionResult> GetAsync(string id)
     {
-        return new ClaimModel(await claimService.GetClaimAsync(id));
+        return Ok(new ClaimModel(await claimService.GetClaimAsync(id)));
     }
 }

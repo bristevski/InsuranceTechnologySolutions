@@ -16,6 +16,7 @@ builder.Services
     {
         x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
+
 var conf = builder.Configuration;
 
 InfrastructureModule.RegisterInfrastructureDependencies(builder.Services);

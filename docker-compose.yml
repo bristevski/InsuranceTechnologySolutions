@@ -24,5 +24,19 @@ services:
     ports:
       - "14330:1433"
     environment:
-      SA_PASSWORD: "P@ssw0rd!"
+      SA_PASSWORD: "NewPassword1234!"
       ACCEPT_EULA: "Y"
+
+  claims-app:
+    container_name: claims-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+    depends_on:
+      - mongo-db
+      - sql-server-db

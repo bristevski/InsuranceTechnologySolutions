@@ -3,6 +3,7 @@ using Claims.Application.Models;
 using Claims.Application.Models.Enums;
 using Claims.Application;
 using Microsoft.AspNetCore.Mvc;
+using Hangfire;
 
 namespace Claims.Controllers;
 
@@ -43,20 +44,20 @@ public class CoversController(ICoverService coverService, IAuditService auditSer
 
         coverModel.Id = guidProvider.NewStringGuid();
 
-        var addCoverTask = coverService.AddCoverAsync(coverModel.ToDomainModel());
-        var addAuditTask = auditService.AuditCoverAsync(coverModel.Id, Consts.HttpRequestTypePost);
+        await coverService.AddCoverAsync(coverModel.ToDomainModel());
 
-        await Task.WhenAll(addCoverTask, addAuditTask);
+        BackgroundJob.Enqueue(() => auditService.AuditCoverAsync(coverModel.Id, Consts.HttpRequestTypePost));
+
         return Ok(coverModel);
     }
 
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteAsync(string id)
     {
-        var deleteCoverTask = coverService.DeleteCoverAsync(id);
-        var deleteAuditTask = auditService.AuditCoverAsync(id, Consts.HttpRequestTypeDelete);
+        await coverService.DeleteCoverAsync(id);
 
-        await Task.WhenAll(deleteCoverTask, deleteAuditTask);
+        BackgroundJob.Enqueue(() => auditService.AuditCoverAsync(id, Consts.HttpRequestTypeDelete));
+
         return Ok();
     }
 }

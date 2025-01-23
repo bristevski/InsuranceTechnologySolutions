@@ -2,6 +2,7 @@ using Claims.Application.Interfaces;
 using Claims.Application.Models;
 using Claims.Application;
 using Microsoft.AspNetCore.Mvc;
+using Hangfire;
 
 
 namespace Claims.Controllers;
@@ -25,10 +26,9 @@ public class ClaimsController(IClaimService claimService, IAuditService auditSer
 
         claimModel.Id = guidProvider.NewStringGuid();
 
-        var addClaimTask = claimService.AddClaimAsync(claimModel.ToDomainModel());
-        var addAuditTask = auditService.AuditClaimAsync(claimModel.Id, Consts.HttpRequestTypePost);
+        await claimService.AddClaimAsync(claimModel.ToDomainModel());
 
-        await Task.WhenAll(addClaimTask, addAuditTask);
+        BackgroundJob.Enqueue(() => auditService.AuditClaimAsync(claimModel.Id, Consts.HttpRequestTypePost));
 
         return Ok(claimModel);
     }
@@ -36,10 +36,9 @@ public class ClaimsController(IClaimService claimService, IAuditService auditSer
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteAsync(string id)
     {
-        var deleteClaimTask = claimService.DeleteClaimAsync(id);
-        var deleteAuditTask = auditService.AuditClaimAsync(id, Consts.HttpRequestTypeDelete);
+        await claimService.DeleteClaimAsync(id);
 
-        await Task.WhenAll(deleteClaimTask, deleteAuditTask);
+        BackgroundJob.Enqueue(() => auditService.AuditClaimAsync(id, Consts.HttpRequestTypeDelete));
 
         return Ok();
     }

@@ -3,6 +3,7 @@ using Claims.Application;
 using Claims.Infrastructure;
 using Claims.Infrastructure.Audit;
 using Claims.Infrastructure.Claims;
+using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
 
@@ -34,6 +35,10 @@ builder.Services.AddDbContext<ClaimsContext>(
     }
 );
 
+// Configure Hangfire
+builder.Services.AddHangfire(x => x.UseSqlServerStorage(conf.GetConnectionString("DefaultConnection")));
+builder.Services.AddHangfireServer();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -51,6 +56,9 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Enable the Hangfire dashboard
+app.UseHangfireDashboard();
 
 using (var scope = app.Services.CreateScope())
 {

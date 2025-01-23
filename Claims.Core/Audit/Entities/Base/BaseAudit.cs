@@ -2,6 +2,7 @@
 
 public class BaseAudit
 {
+    // Unused but required for the migrations...
     public int Id { get; set; }
 
     public DateTime Created { get; set; }

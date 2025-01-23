@@ -10,7 +10,7 @@ public class AuditServiceTests
 {
     private AuditService _sut;
     private IAuditUnitOfWork _unitOfWork;
-    private IDateTimeProvider _dateTimeProvider;
+    private TimeProvider _timeProvider;
     private DateTime _creationDate;
 
     public AuditServiceTests()
@@ -19,10 +19,10 @@ public class AuditServiceTests
         _unitOfWork = Substitute.For<IAuditUnitOfWork>();
 
         _creationDate = new DateTime(2025, 01, 22);
-        _dateTimeProvider = Substitute.For<IDateTimeProvider>();
-        _dateTimeProvider.DateTimeNow().Returns(_creationDate);
+        _timeProvider = Substitute.For<TimeProvider>();
+        _timeProvider.GetUtcNow().Returns(_creationDate);
 
-        _sut = new AuditService(_unitOfWork, _dateTimeProvider);
+        _sut = new AuditService(_unitOfWork, _timeProvider);
     }
 
     [Theory]

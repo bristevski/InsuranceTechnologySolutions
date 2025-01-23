@@ -11,7 +11,6 @@ public static class ApplicationModule
     public static void RegisterApplicationDependencies(IServiceCollection services)
     {
         services.AddScoped<IGuidProvider, GuidProvider>();
-        services.AddScoped<IDateTimeProvider, DateTimeProvider>();
         services.AddScoped<IComputingStrategyProvider, ComputingStrategyProvider>();
 
         services.AddScoped<ICoverValidator, CoverValidator>();

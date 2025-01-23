@@ -3,13 +3,13 @@ using Claims.Application.Models;
 
 namespace Claims.Application.Validators;
 
-public class CoverValidator(IDateTimeProvider dateTimeProvider) : ICoverValidator
+public class CoverValidator(TimeProvider timeProvider) : ICoverValidator
 {
     public List<string> ValidateModel(CoverModel coverModel)
     {
         var errors = new List<string>();
 
-        var currentDateTime = dateTimeProvider.DateTimeNow();
+        var currentDateTime = timeProvider.GetUtcNow().DateTime;
         if (currentDateTime > coverModel.StartDate)
             errors.Add(CoverErrorMessages.StartDateInPast);
 

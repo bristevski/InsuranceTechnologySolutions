@@ -8,15 +8,15 @@ namespace Claims.Application.Tests.Validators;
 public class CoverValidatorTests
 {
     private CoverValidator _sut;
-    private IDateTimeProvider _dateTimeProvider;
+    private TimeProvider _timeProvider;
     private DateTime _currentDateTime = new DateTime(2025, 2, 10);
 
     public CoverValidatorTests()
     {
         // Arrange
-        _dateTimeProvider = Substitute.For<IDateTimeProvider>();
-        _dateTimeProvider.DateTimeNow().Returns(_currentDateTime);
-        _sut = new CoverValidator(_dateTimeProvider);
+        _timeProvider = Substitute.For<TimeProvider>();
+        _timeProvider.GetUtcNow().Returns(_currentDateTime);
+        _sut = new CoverValidator(_timeProvider);
     }
 
     [Fact]

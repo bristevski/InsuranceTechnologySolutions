@@ -4,13 +4,13 @@ using Claims.Core.Audit.Entities;
 
 namespace Claims.Application.Services;
 
-public class AuditService(IAuditUnitOfWork unitOfWork, IDateTimeProvider dateTimeProvider) : IAuditService
+public class AuditService(IAuditUnitOfWork unitOfWork, TimeProvider timeProvider) : IAuditService
 {
     public async Task AuditClaimAsync(string id, string httpRequestType)
     {
         var claimAudit = new ClaimAudit()
         {
-            Created = dateTimeProvider.DateTimeNow(),
+            Created = timeProvider.GetUtcNow().DateTime,
             HttpRequestType = httpRequestType,
             ClaimId = id
         };
@@ -23,7 +23,7 @@ public class AuditService(IAuditUnitOfWork unitOfWork, IDateTimeProvider dateTim
     {
         var coverAudit = new CoverAudit()
         {
-            Created = dateTimeProvider.DateTimeNow(),
+            Created = timeProvider.GetUtcNow().DateTime,
             HttpRequestType = httpRequestType,
             CoverId = id
         };
